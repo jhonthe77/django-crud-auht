@@ -1,7 +1,7 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse
 
 
@@ -36,14 +36,30 @@ def signup(request):
             'errors': 'password does not match'
         })
 
+
 def tasks(request):
     return render(request, 'task.html')
 
-def signupout(request):
+
+def singout(request):
     logout(request)
     return redirect('home')
 
+
 def signin(request):
-    return render(request, 'signin.html',{
-        'from': AuthenticationForm
-    })
+    if request.method == 'GET':
+        return render(request, 'signin.html', {
+            'form': UserCreationForm
+        })
+    else:
+        user=authenticate(
+            request, username=request.POST['username'], password=request.POST['password1'])
+        if user is None:
+            return render(request, 'signin.html', {
+                'from': AuthenticationForm,
+                'error': 'username or password is incorrect'
+            })
+        else:
+            login(request, user)
+            return redirect('tasks')
+      
