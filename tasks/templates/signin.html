@@ -1,6 +1,7 @@
 {% extends 'base.html' %} 
 {% block content %}
 {{error}}
+<h1>signin</h1>
 <form action="/signin/" method="POST">
   {% csrf_token %} 
   {{form.as_p}}

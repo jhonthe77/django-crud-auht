@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import tasks
+
+
+class tasksAdmin(admin.ModelAdmin):
+    readonly_fields=('created_at',)
+admin.site.register(tasks,tasksAdmin)
